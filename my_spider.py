@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Simple debugger
-# See instructions around line 34
+# See instructions around line 35
+
 import sys
 import readline
 
@@ -28,19 +29,16 @@ def main():
     print remove_html_markup("'<b>foo</b>'")
 
 # globals
-breakpoints = {11: True}
+breakpoints = {9: True}
 stepping = False
 
-""" *** INSTRUCTIONS ***
+"""
+Our debug function
 Improve and expand this function to accept 
-a print command 'p <arg>'.
-If the print command has no argument,
-print out the dictionary that holds all variables.
-Print the value of the supplied variable
-in a form 'var = repr(value)', if
-the 'p' is followed by an argument,
-or print 'No such variable:', arg
-if no such variable exists.
+a breakpoint command 'b <line>'.
+Add the line number to the breakpoints dictionary
+or print 'You must supply a line number' 
+if 'b' is not followed by a line number.
 """
 def debug(command, my_locals):
     global stepping
@@ -57,7 +55,6 @@ def debug(command, my_locals):
     elif command.startswith('c'):   # continue
         stepping = False
         return True
-    # {'quote': False, 's': 'xyz', 'tag': False, 'c': 'x', 'out': ''}
     elif command.startswith('p'):    # print 
         if arg != None and arg in my_locals:
             print arg + ' = ' + repr(my_locals[arg])
@@ -65,7 +62,13 @@ def debug(command, my_locals):
             print 'No such variable: ' + arg
         else:
             print my_locals
-            
+        pass
+    elif command.startswith('b'):    # breakpoint         
+        if arg == None:
+            print 'You must supply a line number' 
+        else:
+            breakpoints.update({int(arg): True})
+
     elif command.startswith('q'):   # quit
         sys.exit(0)
     else:
@@ -73,7 +76,7 @@ def debug(command, my_locals):
         
     return False
 
-commands = ["p", "s", "p tag", "p foo", "q"]
+commands = ["b 5", "c", "c", "q"]
 
 def input_command():
     #command = raw_input("(my-spyder) ")
@@ -94,6 +97,13 @@ def traceit(frame, event, trace_arg):
     return traceit
 
 # Using the tracer
-sys.settrace(traceit)
-main()
-sys.settrace(None)
+#sys.settrace(traceit)
+#main()
+#sys.settrace(None)
+
+#Simple test 
+print breakpoints
+debug("b 5", {'quote': False, 's': 'xyz', 'tag': False, 'c': 'b', 'out': ''})
+print breakpoints == {9: True, 5: True}
+#>>> True
+
