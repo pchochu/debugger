@@ -28,7 +28,7 @@ def main():
     print remove_html_markup("'<b>foo</b>'")
 
 # globals
-breakpoints = {9: True}
+breakpoints = {11: True}
 stepping = False
 
 """ *** INSTRUCTIONS ***
@@ -57,14 +57,14 @@ def debug(command, my_locals):
     elif command.startswith('c'):   # continue
         stepping = False
         return True
+    # {'quote': False, 's': 'xyz', 'tag': False, 'c': 'x', 'out': ''}
     elif command.startswith('p'):    # print 
         if arg != None and arg in my_locals:
-            print repr(arg) + ' = ' + repr(my_locals[arg])
+            print arg + ' = ' + repr(my_locals[arg])
         elif arg != None and arg not in my_locals:
-            print 'No such variable: ' + repr(arg)
+            print 'No such variable: ' + arg
         else:
-            for variable in my_locals:
-                print repr(variable) + ' = ' + repr(my_locals[variable])
+            print my_locals
             
     elif command.startswith('q'):   # quit
         sys.exit(0)
